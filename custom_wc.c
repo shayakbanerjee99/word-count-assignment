@@ -89,7 +89,6 @@ void word_count(char* fname, int *lines, int *words, int *bytes){
         ch_count++;
     }
 
-    w_count--;
 
     *lines = tot;
     *words = w_count;
@@ -122,16 +121,26 @@ int main(int argc, char *argv[]){
                 addNode(args, argv[i]);
             }
         }
-    } else {
-        printf("error: no arguments provided\n");
-        return 0;
-    }
+    } 
 
     // if no argument was provided, then all are true
     if(l_flag == 0 && w_flag == 0 && c_flag == 0){
         l_flag = 1;
         w_flag = 1;
         c_flag = 1;
+    }
+
+    // if no filenames are provided
+    FILE *fptr;
+    fptr = fopen("temp.txt", "a");
+
+    if(args->value == NULL){
+        char c[1000];
+        while(fgets(c, sizeof(c), stdin))
+            fprintf(fptr, "%s", c);
+        fclose(fptr);
+
+        args->value = "temp.txt";
     }
 
     struct Node* current = args;
@@ -141,8 +150,8 @@ int main(int argc, char *argv[]){
         int *words = (int*)malloc(sizeof(int));
         int *bytes = (int*)malloc(sizeof(int));
         word_count(current->value, lines, words, bytes);
-        
-        printf("filename: %s", current->value);
+
+        printf("\nfilename: %s", current->value);
 
         if(l_flag == 1)
             printf("\nlines: %d", *lines);
@@ -155,6 +164,8 @@ int main(int argc, char *argv[]){
         
         current = current->next;
     }
+
+    remove("temp.txt");
 
     return 0;
 }
