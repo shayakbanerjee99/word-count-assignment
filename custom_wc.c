@@ -160,7 +160,8 @@ int main(int argc, char *argv[]){
         total_lines += *lines;
         total_words += *words;
         
-        printf("\nfilename: %s", current->value);
+        if(strcmp(current->value, "temp.txt") != 0)
+            printf("\nfilename: %s", current->value);
 
         if(l_flag == 1)
             printf("\nlines: %d", *lines);
