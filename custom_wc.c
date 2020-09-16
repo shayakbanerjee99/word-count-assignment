@@ -99,6 +99,8 @@ void word_count(char* fname, int *lines, int *words, int *bytes){
 int main(int argc, char *argv[]){
 
     int l_flag = 0, w_flag = 0, c_flag = 0;
+    int count_of_files_analyzed = 0;
+    int total_words=0, total_lines=0, total_characters=0;
 
     struct Node* args = (struct Node*)malloc(sizeof(struct Node*));
 
@@ -145,12 +147,19 @@ int main(int argc, char *argv[]){
 
     struct Node* current = args;
     while(current != NULL){
+
+        count_of_files_analyzed++;
         
         int *lines = (int*)malloc(sizeof(int));
         int *words = (int*)malloc(sizeof(int));
         int *bytes = (int*)malloc(sizeof(int));
         word_count(current->value, lines, words, bytes);
 
+        // adding the data to the totals
+        total_characters += *bytes;
+        total_lines += *lines;
+        total_words += *words;
+        
         printf("\nfilename: %s", current->value);
 
         if(l_flag == 1)
@@ -160,9 +169,16 @@ int main(int argc, char *argv[]){
         if(c_flag == 1)
             printf("\nchars: %d", *bytes);
         
-        printf("\n\n");
+        printf("\n");
         
         current = current->next;
+    }
+
+    // if the data of more than one file was displayed
+    if(count_of_files_analyzed > 1){
+        printf("\nTotals-Lines: %d", total_lines);
+        printf("\nWords: %d", total_words);
+        printf("\nChars: %d\n", total_characters);
     }
 
     remove("temp.txt");
